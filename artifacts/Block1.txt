@@ -1,0 +1,10 @@
+$CurrentPageFile = Get-WmiObject -Query 'select * from Win32_PageFileSetting'
+$CurrentPageFile.delete()
+Set-WMIInstance -Class Win32_PageFileSetting -Arguments @{name='c:\pagefile.sys';InitialSize = 0; MaximumSize = 0}
+
+#disable dvd drive 
+
+Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Services\cdrom -Name Start -Value 4 -Type DWord
+
+#restart 
+Restart-Computer

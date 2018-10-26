@@ -1,0 +1,20 @@
+#change the temp drive letter 
+
+$drive = Get-WmiObject -Class win32_volume -Filter "DriveLetter = 'd:'"
+Set-WmiInstance -input $drive -Arguments @{ DriveLetter='t:' }
+
+#initialize a new disk 
+
+# initialize data disk
+$drive = Get-WmiObject -Class win32_volume -Filter "DriveLetter = 'e:'"
+Set-WmiInstance -input $drive -Arguments @{ DriveLetter='d:' } 
+
+
+
+#change the page file back 
+$CurrentPageFile = Get-WmiObject -Query 'select * from Win32_PageFileSetting'
+$CurrentPageFile.delete()
+Set-WMIInstance -Class Win32_PageFileSetting -Arguments @{name='t:\pagefile.sys';InitialSize = 0; MaximumSize = 0}
+
+#restart 
+Restart-Computer
